@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import financial_app.dto.AccountStatementDTO;
 
 import java.util.List;
 
@@ -47,4 +48,9 @@ public class AccountController {
     public void deleteAccount(@PathVariable Long id) {
         accountService.deleteAccount(id);
     }
+    @GetMapping("/{id}/statement")
+public AccountStatementDTO getAccountStatement(@PathVariable Long id) {
+    return accountService.getAccountStatement(id);
+}
+    
 }

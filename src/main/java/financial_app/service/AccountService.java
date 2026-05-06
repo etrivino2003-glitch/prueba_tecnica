@@ -9,8 +9,11 @@ import  financial_app.exception.BusinessException;
 import  financial_app.exception.ResourceNotFoundException;
 import  financial_app.repository.AccountRepository;
 import  financial_app.repository.ClientRepository;
+import financial_app.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import financial_app.dto.AccountStatementDTO;
+import financial_app.repository.TransactionRepository;
 
 import java.math.BigDecimal;
 import java.security.SecureRandom;
@@ -22,6 +25,7 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final ClientRepository clientRepository;
+    private final TransactionRepository transactionRepository;
 
     private final SecureRandom random = new SecureRandom();
 
@@ -99,4 +103,16 @@ public class AccountService {
 
         return accountNumber;
     }
+    public AccountStatementDTO getAccountStatement(Long accountId) {
+    Account account = getAccountById(accountId);
+
+    return new AccountStatementDTO(
+            account.getId(),
+            account.getAccountNumber(),
+            account.getAccountType(),
+            account.getStatus(),
+            account.getBalance(),
+            transactionRepository.findBySourceAccountIdOrTargetAccountId(accountId, accountId)
+    );
+}
 }
