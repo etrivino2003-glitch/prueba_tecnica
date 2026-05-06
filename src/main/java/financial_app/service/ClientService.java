@@ -4,9 +4,11 @@ import financial_app.dto.ClientRequestDTO;
 import financial_app.entity.Client;
 import financial_app.exception.BusinessException;
 import financial_app.exception.ResourceNotFoundException;
+import financial_app.repository.AccountRepository;
 import financial_app.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import financial_app.repository.AccountRepository;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -17,6 +19,7 @@ import java.util.List;
 public class ClientService {
 
     private final ClientRepository clientRepository;
+    private final AccountRepository accountRepository;
 
     public Client createClient(ClientRequestDTO request) {
         validateAdult(request.getBirthDate());
@@ -65,10 +68,15 @@ public class ClientService {
         return clientRepository.save(client);
     }
 
-    public void deleteClient(Long id) {
-        Client client = getClientById(id);
-        clientRepository.delete(client);
+  public void deleteClient(Long id) {
+    Client client = getClientById(id);
+
+    if (accountRepository.existsByClientId(id)) {
+        throw new BusinessException("No se puede eliminar el cliente porque tiene productos vinculados");
     }
+
+    clientRepository.delete(client);
+}
 
     private void validateAdult(LocalDate birthDate) {
         int age = Period.between(birthDate, LocalDate.now()).getYears();
