@@ -35,20 +35,20 @@ class ClientServiceTest {
         ClientRequestDTO request = new ClientRequestDTO();
         request.setIdentificationType("CC");
         request.setIdentificationNumber("1075289632");
-        request.setNames("Carlos");
-        request.setLastName("Villamil");
-        request.setEmail("carlos@example.com");
+        request.setNames("martin");
+        request.setLastName("ortiz");
+        request.setEmail("martin@example.com");
         request.setBirthDate(LocalDate.of(2000, 5, 15));
 
         when(clientRepository.existsByIdentificationNumber("1075289632")).thenReturn(false);
-        when(clientRepository.existsByEmail("carlos@example.com")).thenReturn(false);
+        when(clientRepository.existsByEmail("martin@example.com")).thenReturn(false);
         when(clientRepository.save(any(Client.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         Client result = clientService.createClient(request);
 
         assertNotNull(result);
-        assertEquals("Carlos", result.getNames());
-        assertEquals("Villamil", result.getLastName());
+        assertEquals("martin", result.getNames());
+        assertEquals("ortiz", result.getLastName());
         assertEquals("1075289632", result.getIdentificationNumber());
 
         verify(clientRepository).save(any(Client.class));

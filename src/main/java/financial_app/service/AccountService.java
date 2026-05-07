@@ -26,7 +26,6 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final ClientRepository clientRepository;
     private final TransactionRepository transactionRepository;
-
     private final SecureRandom random = new SecureRandom();
 
     public Account createAccount(AccountRequestDTO request) {
@@ -115,4 +114,6 @@ public class AccountService {
             transactionRepository.findBySourceAccountIdOrTargetAccountId(accountId, accountId)
     );
 }
+
+    
 }
